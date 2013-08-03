@@ -18,7 +18,7 @@ are (eg *~/.config/inkscape/extensions*).
 
 * Run
 
-Run from the Extensions - Boardgames submenu.
+Run from the Extensions - Boardgames sub-menu.
 
 The currently selected layer must include some rectangles and
 lines (path segments). If a segment of a path starts in one
@@ -46,7 +46,7 @@ straight lines, shift+F6) between rectangles that should be connected
 rectangle and end anywhere in the other. Actually it is the line
 segments that count. You can keep drawing many connections as one long
 path of lines, as long as there is a single direct line between
-connected rectangles (curved lines are ok too). Run the extension and
+connected rectangles (curved lines are OK too). Run the extension and
 specify an output file and the JSON describing your connected
 rectangles will be created. As described above some style attributes
 will be included in the output, so you can set colors and line-styles
@@ -80,14 +80,14 @@ rectangles and paths when actually playing the game (or when exporting
 the map to some other format). It is just there for describing the
 connections, not to look pretty.
 
-Look at the examples in the **examples** subdirectory if you
+Look at the examples in the **examples** sub-directory if you
 are still confused.
 
 * Bugs
 
 See the expected problems with transforms (not that I tried).
 Probably many other problems as well. There are probably ways
-to construct paths that breaks the script. Don't do that.
+to construct paths that break the script. Don't do that.
 
 Please report any problems that resulted from sane usage.
 Patches are most welcome.
