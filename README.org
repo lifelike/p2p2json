@@ -1,30 +1,119 @@
 * Overview
 
-P2p2json is a very simple Inkscape extension to extract
-data about a point-2-point map to JSON. Run the extension
-in Inkscape without giving an output filename to get some
-more information (or read the script in *p2p2json.py*).
+P2p2json is a very simple Inkscape extension to extract data about a
+point-2-point map to JSON. The original idea was to use Inkscape as a
+very simple adhoc map editor for area or point-to-point movement
+games. Of course the game could parse the SVG file itself to get this
+data, but this makes the parsing in the game much simpler and
+only includes a subset of all the information seen in
+the SVG.
 
+If you don't know what any of that means you probably
+don't need this.
 
-* Running in Inksape
+* Install
 
 Copy the py and inx files to where your Inkscape extensions
 are (eg *~/.config/inkscape/extensions*).
 
+* Run
+
 Run from the Extensions - Boardgames submenu.
 
-* Running from command-line (advanced users)
+The currently selected layer must include some rectangles and
+lines (path segments). If a segment of a path starts in one
+rectangle and ends in another rectangle it is counted
+as a connection and added to the output JSON data. Every
+connected rectangle is also added. For every added
+point or connection the following attributes are also included
+(when set):
+    'fill'
+    'stroke'
+    'marker'
+    'marker-start'
+    'marker-mid'
+    'marker-end'
+    'stroke-dasharray'
 
-You can run this as a stand-alone script without Inkscape (although
-you will need to copy the inkex.py and simplepath.py files from the
-Inkscape extensions directory first (advanced users can figure
-that out)). Example of running on command-line:
+* What's the point? How to use?
 
- ./p2p2json.py -o /tmp/test1.json examples/test1.svg  > /dev/null
+The idea is that you want to mark up regions (points) on for instance
+a game map (eg like a Risk board, or the board for some game that is
+actually fun to play like [[http://boardgamegeek.com/boardgame/91/paths-of-glory][Paths of Glory]]). Create a new layer and draw
+a rectangle in each area of the game map. Draw lines (the tool to draw
+straight lines, shift+F6) between rectangles that should be connected
+(eg adjacent countries). The line must just start anywhere within one
+rectangle and end anywhere in the other. Actually it is the line
+segments that count. You can keep drawing many connections as one long
+path of lines, as long as there is a single direct line between
+connected rectangles (curved lines are ok too). Run the extension and
+specify an output file and the JSON describing your connected
+rectangles will be created. As described above some style attributes
+will be included in the output, so you can set colors and line-styles
+(eg arrows on the end of paths) to specify special areas of
+connections.  Different color rectangles could signify areas of
+different terrain or whatever. The id of each rectangle (set in Object
+Properties; right-click the rectangle) is also output, and you might
+want to set that to something that makes sense, and of course the
+exact coordinates of the rectangle corners.
 
-* License
+Don't do any transformations like rotating or scaling any of the
+rectangles or paths, and avoid funny paths that curve in weird ways,
+because any of that is just likely to confuse this poor script.
+Be nice to it and you will get the output data you want.
 
-Copyright 2013 Pelle Nilsson
+Now to actually use the JSON data you need to do some programming on
+the other side (eg the game that use the map). This is just for
+providing you with all the raw data. You might even want to process
+the JSON through some other script first that replace the style
+attributes with information that makes more sense in the game (eg blue
+lines are instead marked up as being connections that cross water).
+
+You can go further and not only have a rectangle to show each
+area, but connect that rectangle using lines in a different
+color to other rectangles that you use for other information
+(eg place rectangles in all the places of the area where you
+might want to place game pieces during play).
+
+You probably want to hide the layer containing the point-2-point
+rectangles and paths when actually playing the game (or when exporting
+the map to some other format). It is just there for describing the
+connections, not to look pretty.
+
+Look at the examples in the **examples** subdirectory if you
+are still confused.
+
+* Bugs
+
+See the expected problems with transforms (not that I tried).
+Probably many other problems as well. There are probably ways
+to construct paths that breaks the script. Don't do that.
+
+Please report any problems that resulted from sane usage.
+Patches are most welcome.
+
+* Licenses
+** json.py
+
+Copyright (C) 2005  Patrick D. Logan
+Contact mailto:patrickdlogan@stardecisions.com
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+** all other included files
+Copyright (C) 2008, 2013 Pelle Nilsson
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
