@@ -7,6 +7,10 @@
   <dependency type="executable" location="extensions">simplepath.py</dependency>
   <param name="outfile" type="string"
   	 _gui-text="Output File (optional, will overwrite this file)"></param>
+
+  <param name="include-unconnected" type="boolean"
+        _gui-text="Include Unconnected">false</param>
+
   <effect>
     <object-type>all</object-type>
     <effects-menu>

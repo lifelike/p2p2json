@@ -128,6 +128,11 @@ class P2P2JsonEffect(inkex.Effect):
         self.nextid = 1000000
         self.OptionParser.add_option('-o', '--outfile', action = 'store',
                                      type = 'string', dest = 'outfile')
+        self.OptionParser.add_option('-u', '--include-unconnected',
+                                     action = 'store',
+                                     type = 'string',
+                                     default = 'false',
+                                     dest = 'unconnected')
 
     def effect(self):
         doc = self.document
@@ -136,6 +141,7 @@ class P2P2JsonEffect(inkex.Effect):
             outfile = open(self.options.outfile, "w")
         else:
             outfile = None
+        include_unconnected = self.options.unconnected != 'false'
         rects = []
         connections = []
         connected_rects = set()
@@ -165,7 +171,11 @@ class P2P2JsonEffect(inkex.Effect):
                 else:
                     pass
         res = {}
-        res['points'] = [r.toDict() for r in connected_rects]
+        if include_unconnected:
+            points_to_output = rects
+        else:
+            points_to_output = connected_rects
+        res['points'] = [r.toDict() for r in points_to_output]
         res['connections'] = [c.toDict() for c in connections]
         jsonres = json.write(res)
         if outfile:
