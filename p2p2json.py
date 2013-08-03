@@ -134,6 +134,7 @@ class P2P2JsonEffect(inkex.Effect):
             outfile = None
         rects = []
         connections = []
+        connected_rects = set()
         for r in self.current_layer.xpath('//svg:rect', namespaces=NSS):
             rect = Rectangle(r)
             rects.append(rect)
@@ -155,19 +156,21 @@ class P2P2JsonEffect(inkex.Effect):
                     r = findRect(rects, coord[0], coord[1])
                     if r and lastR:
                         connection = Connection(lastR, r, lastCoord, coord, p)
-                        connections.append(connection) #not really used yet
+                        connections.append(connection)
+                        connected_rects.add(lastR)
+                        connected_rects.add(r)
                     lastR = r
                 else:
                     pass
         res = {}
-        res['points'] = [r.toDict() for r in rects]
+        res['points'] = [r.toDict() for r in connected_rects]
         res['connections'] = [c.toDict() for c in connections]
         jsonres = json.write(res)
         if outfile:
             outfile.write(jsonres)
         else:
             sys.exit(jsonres + '\n\n' + DIALOG_JSON_MESSAGE)
-            
+
 if __name__ == '__main__':
     effect = P2P2JsonEffect()
     effect.affect()

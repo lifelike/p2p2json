@@ -6,10 +6,21 @@ in Inkscape without giving an output filename to get some
 more information (or read the script in *p2p2json.py*).
 
 
-* Install
+* Running in Inksape
 
 Copy the py and inx files to where your Inkscape extensions
 are (eg *~/.config/inkscape/extensions*).
+
+Run from the Extensions - Boardgames submenu.
+
+* Running from command-line (advanced users)
+
+You can run this as a stand-alone script without Inkscape (although
+you will need to copy the inkex.py and simplepath.py files from the
+Inkscape extensions directory first (advanced users can figure
+that out)). Example of running on command-line:
+
+ ./p2p2json.py -o /tmp/test1.json examples/test1.svg  > /dev/null
 
 * License
 
