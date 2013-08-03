@@ -82,14 +82,10 @@ class Rectangle:
         return res
 
 class Connection:
-    "Information about a connection between two rectangles, not used yet."
-    def __init__(self, lastR, r, lastCoord, coord, element):
+    "Information about a connection between two rectangles."
+    def __init__(self, lastR, r, element):
         self.f = lastR
         self.t = r
-        self.d = "M %s,%s L %s,%s" % (lastCoord[0],
-                                      lastCoord[1],
-                                      coord[0],
-                                      coord[1])
         self.style = parseStyle(element)
 
     def toDict(self):
@@ -117,6 +113,14 @@ def parseStyle(element):
                 res[n] = v
     return res
 
+def add_connection(element, r, lastR, connections, connected_rects):
+    if r and lastR:
+        connection = Connection(lastR, r, element)
+        connections.append(connection)
+        connected_rects.add(lastR)
+        connected_rects.add(r)
+
+
 class P2P2JsonEffect(inkex.Effect):
     def __init__(self):
         inkex.Effect.__init__(self)
@@ -141,24 +145,22 @@ class P2P2JsonEffect(inkex.Effect):
         for p in self.current_layer.xpath('//svg:path', namespaces=NSS):
             d = p.get('d')
             path = simplepath.parsePath(d)
-            coord = [0, 0]
             lastCoord = None
             lastR = None
             for c in path:
-                lastCoord = coord
                 outputCommand = c[0]
                 params = c[1]
                 if outputCommand == 'M':
-                    coord = params
-                    lastR = findRect(rects, coord[0], coord[1])
+                    lastR = findRect(rects, params[0], params[1])
                 elif outputCommand == 'L':
-                    coord = params
-                    r = findRect(rects, coord[0], coord[1])
-                    if r and lastR:
-                        connection = Connection(lastR, r, lastCoord, coord, p)
-                        connections.append(connection)
-                        connected_rects.add(lastR)
-                        connected_rects.add(r)
+                    r = findRect(rects, params[0], params[1])
+                    add_connection(p, r, lastR,
+                                   connections, connected_rects)
+                    lastR = r
+                elif outputCommand == 'C':
+                    r = findRect(rects, params[4], params[5])
+                    add_connection(p, r, lastR,
+                                   connections, connected_rects)
                     lastR = r
                 else:
                     pass
