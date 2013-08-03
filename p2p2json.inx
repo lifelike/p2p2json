@@ -1,0 +1,19 @@
+<inkscape-extension>
+  <_name>Point2Point Map to JSON Data</_name>
+  <id>pelles.effect.p2p2json</id>
+  <dependency type="executable" location="extensions">p2p2json.py</dependency>
+  <dependency type="executable" location="extensions">inkex.py</dependency>
+  <dependency type="executable" location="extensions">json.py</dependency>
+  <dependency type="executable" location="extensions">simplepath.py</dependency>
+  <param name="outfile" type="string"
+  	 _gui-text="Output File (optional, will overwrite this file)"></param>
+  <effect>
+    <object-type>all</object-type>
+    <effects-menu>
+       <submenu _name="Boardgames"/>
+    </effects-menu>
+  </effect>
+  <script>
+    <command reldir="extensions" interpreter="python">p2p2json.py</command>
+  </script>
+</inkscape-extension>
